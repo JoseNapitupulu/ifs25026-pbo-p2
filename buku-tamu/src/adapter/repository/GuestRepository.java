@@ -34,5 +34,6 @@ public class GuestRepository implements IGuestRepository {
 
     @Override
     public void update(Guest guest) {
+        // Guest is mutable and stored by reference, so the change is already persisted.
     }
 }

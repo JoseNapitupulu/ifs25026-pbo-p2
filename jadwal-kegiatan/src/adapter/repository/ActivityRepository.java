@@ -34,5 +34,6 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public void update(Activity activity) {
+        // Activity is mutable and stored by reference, so the change is already persisted.
     }
 }

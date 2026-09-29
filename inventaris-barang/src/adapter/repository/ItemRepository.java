@@ -34,5 +34,6 @@ public class ItemRepository implements IItemRepository {
 
     @Override
     public void update(Item item) {
+        // Item is mutable and stored by reference, so the change is already persisted.
     }
 }

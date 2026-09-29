@@ -7,7 +7,7 @@ public class Transaction {
     private TransactionType type;
 
     public Transaction(int id, String description, double amount, TransactionType type) {
-        if (description == null || description.isBlank() || amount <= 0 || type == null) {
+        if (description == null || description.isBlank() || !Double.isFinite(amount) || amount <= 0 || type == null) {
             throw new IllegalArgumentException("Data transaksi tidak valid");
         }
         this.id = id;
@@ -37,7 +37,7 @@ public class Transaction {
             this.description = description;
         }
         if (amount != null) {
-            if (amount <= 0) {
+            if (!Double.isFinite(amount) || amount <= 0) {
                 throw new IllegalArgumentException("Jumlah tidak valid");
             }
             this.amount = amount;

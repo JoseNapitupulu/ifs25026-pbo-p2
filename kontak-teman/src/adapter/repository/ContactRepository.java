@@ -34,5 +34,6 @@ public class ContactRepository implements IContactRepository {
 
     @Override
     public void update(Contact contact) {
+        // Contact is mutable and stored by reference, so the change is already persisted.
     }
 }

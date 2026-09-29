@@ -2,9 +2,12 @@ package framework.util;
 
 import java.util.Scanner;
 
-/** Utility input khusus aplikasi Catatan Keuangan. */
-public class TransactionInputUtil {
+/** Utility bersama untuk membaca dan mengonversi input console. */
+public final class InputUtil {
     private static final Scanner SCANNER = new Scanner(System.in);
+
+    private InputUtil() {
+    }
 
     public static String input(String prompt) {
         System.out.print(prompt + ": ");

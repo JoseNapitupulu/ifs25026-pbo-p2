@@ -3,7 +3,7 @@ package framework.view;
 import adapter.presenter.TransactionPresenter;
 import domain.entity.TransactionSortOption;
 import domain.entity.TransactionType;
-import framework.util.TransactionInputUtil;
+import framework.util.InputUtil;
 import usecase.TransactionUseCase;
 
 /** Tampilan konsol untuk mengelola transaksi keuangan. */
@@ -22,7 +22,7 @@ public class TransactionView {
         while (running) {
             presenter.show(useCase.getAll());
             printMenu();
-            switch (TransactionInputUtil.input("Pilih")) {
+            switch (InputUtil.input("Pilih")) {
                 case "1" -> addTransaction();
                 case "2" -> searchTransaction();
                 case "3" -> presenter.balance(useCase.balance());
@@ -47,21 +47,25 @@ public class TransactionView {
     }
 
     private void addTransaction() {
-        String description = TransactionInputUtil.input("Deskripsi (x Jika Batal)");
+        String description = InputUtil.input("Deskripsi (x Jika Batal)");
         if (description.equalsIgnoreCase("x")) {
             return;
         }
-        Double amount = TransactionInputUtil.amount("Jumlah");
-        TransactionType type = parseType(TransactionInputUtil.input("Tipe (i = pemasukan, e = pengeluaran)"));
-        if (description.isBlank() || amount == null || amount <= 0 || type == null) {
+        Double amount = InputUtil.amount("Jumlah");
+        TransactionType type = parseType(InputUtil.input("Tipe (i = pemasukan, e = pengeluaran)"));
+        if (description.isBlank() || amount == null || type == null) {
             presenter.message("[!] Deskripsi, jumlah, dan tipe transaksi tidak valid!");
             return;
         }
-        presenter.added(useCase.add(description, amount, type));
+        try {
+            presenter.added(useCase.add(description, amount, type));
+        } catch (IllegalArgumentException exception) {
+            presenter.message("[!] Jumlah transaksi tidak valid!");
+        }
     }
 
     private void searchTransaction() {
-        String keyword = TransactionInputUtil.input("Kata kunci (x Jika Batal)");
+        String keyword = InputUtil.input("Kata kunci (x Jika Batal)");
         if (!keyword.equalsIgnoreCase("x")) {
             presenter.show(useCase.search(keyword));
         }
@@ -80,12 +84,12 @@ public class TransactionView {
     private void updateTransaction() {
         Integer id = readId("ID transaksi (x Jika Batal)");
         if (id == null) return;
-        String description = TransactionInputUtil.input("Deskripsi baru (kosongkan jika tidak berubah)");
-        String amountInput = TransactionInputUtil.input("Jumlah baru (kosongkan jika tidak berubah)");
-        String typeInput = TransactionInputUtil.input("Tipe baru (i/e, kosongkan jika tidak berubah)");
-        Double amount = amountInput.isBlank() ? null : TransactionInputUtil.amountValue(amountInput);
+        String description = InputUtil.input("Deskripsi baru (kosongkan jika tidak berubah)");
+        String amountInput = InputUtil.input("Jumlah baru (kosongkan jika tidak berubah)");
+        String typeInput = InputUtil.input("Tipe baru (i/e, kosongkan jika tidak berubah)");
+        Double amount = amountInput.isBlank() ? null : InputUtil.amountValue(amountInput);
         TransactionType type = typeInput.isBlank() ? null : parseType(typeInput);
-        if ((!amountInput.isBlank() && (amount == null || amount <= 0)) || (!typeInput.isBlank() && type == null)) {
+        if ((!amountInput.isBlank() && amount == null) || (!typeInput.isBlank() && type == null)) {
             presenter.message("[!] Jumlah atau tipe transaksi tidak valid!");
             return;
         }
@@ -106,7 +110,7 @@ public class TransactionView {
         System.out.println("2. Jumlah terbesar");
         System.out.println("3. Pemasukan dulu");
         System.out.println("4. Pengeluaran dulu");
-        String input = TransactionInputUtil.input("Pilih");
+        String input = InputUtil.input("Pilih");
         TransactionSortOption option = switch (input) {
             case "1" -> TransactionSortOption.AMOUNT_ASC;
             case "2" -> TransactionSortOption.AMOUNT_DESC;
@@ -130,9 +134,9 @@ public class TransactionView {
     }
 
     private Integer readId(String prompt) {
-        String input = TransactionInputUtil.input(prompt);
+        String input = InputUtil.input(prompt);
         if (input.equalsIgnoreCase("x")) return null;
-        Integer id = TransactionInputUtil.idValue(input);
+        Integer id = InputUtil.idValue(input);
         if (id == null) presenter.message("[!] ID tidak valid!");
         return id;
     }

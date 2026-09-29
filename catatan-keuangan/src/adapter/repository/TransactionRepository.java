@@ -37,5 +37,6 @@ public class TransactionRepository implements ITransactionRepository {
 
     @Override
     public void update(Transaction transaction) {
+        // Transaction is mutable and stored by reference, so the change is already persisted.
     }
 }
