@@ -1,3 +1,65 @@
 package adapter.presenter;
-import domain.entity.Activity; import java.util.*;
-public class ActivityPresenter { private String f(Activity a){return a.getId()+" | "+a.getTitle()+" | "+a.getDay()+" | "+a.getTime();} public void show(List<Activity> as){if(as.isEmpty()){System.out.println("- Data kegiatan belum tersedia!");return;}as.forEach(a->System.out.println(f(a)));} public void added(Activity a){System.out.println("Berhasil menambah kegiatan: "+f(a));} public void msg(String s){System.out.println(s);} }
+
+import domain.entity.Activity;
+import java.util.List;
+
+public class ActivityPresenter {
+    private String format(Activity activity) {
+        return String.format("%d | %s | %s | %s", activity.getId(), activity.getTitle(), activity.getDay(), activity.getTime());
+    }
+
+    private void printList(List<Activity> list, String header, String emptyMessage) {
+        System.out.println(header);
+        if (list.isEmpty()) {
+            System.out.println(emptyMessage);
+        } else {
+            for (Activity activity : list) {
+                System.out.println(format(activity));
+            }
+        }
+    }
+
+    public void showActivities(List<Activity> list) {
+        printList(list, "Daftar Kegiatan:", "- Data kegiatan belum tersedia!");
+    }
+
+    public void showSearchResults(List<Activity> list, String keyword) {
+        printList(list, "Hasil Pencarian: \"" + keyword + "\"", "- Kegiatan tidak ditemukan!");
+    }
+
+    public void showSortedActivities(List<Activity> list) {
+        printList(list, "Daftar Kegiatan (Terurut):", "- Data kegiatan belum tersedia!");
+    }
+
+    public void showAddSuccess(Activity activity) {
+        System.out.printf("Berhasil menambah kegiatan: %s%n", format(activity));
+    }
+
+    public void showRemoveSuccess() {
+        System.out.println("Berhasil menghapus kegiatan.");
+    }
+
+    public void showRemoveFailed(int id) {
+        System.out.printf("[!] Gagal menghapus kegiatan dengan ID: %d.%n", id);
+    }
+
+    public void showUpdateSuccess() {
+        System.out.println("Berhasil mengubah kegiatan.");
+    }
+
+    public void showUpdateFailed(int id) {
+        System.out.printf("[!] Gagal mengubah kegiatan dengan ID: %d.%n", id);
+    }
+
+    public void showInvalidChoice() {
+        System.out.println("[!] Pilihan tidak dimengerti.");
+    }
+
+    public void showInvalidId() {
+        System.out.println("[!] ID tidak valid!");
+    }
+
+    public void showInvalidSortOption() {
+        System.out.println("[!] Pilihan tidak valid!");
+    }
+}

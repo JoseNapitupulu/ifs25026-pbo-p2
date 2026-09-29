@@ -1,10 +1,41 @@
 package adapter.repository;
-import domain.entity.*; import domain.repository.ITransactionRepository; import java.util.*;
+
+import domain.entity.Transaction;
+import domain.entity.TransactionType;
+import domain.repository.ITransactionRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public class TransactionRepository implements ITransactionRepository {
-    private final List<Transaction> data = new ArrayList<>(); private int nextId = 1;
-    public List<Transaction> findAll() { return new ArrayList<>(data); }
-    public Optional<Transaction> findById(int id) { return data.stream().filter(t -> t.getId() == id).findFirst(); }
-    public Transaction save(String d, double a, TransactionType type) { Transaction t = new Transaction(nextId++, d, a, type); data.add(t); return t; }
-    public boolean deleteById(int id) { return data.removeIf(t -> t.getId() == id); }
-    public void update(Transaction transaction) { }
+    private final List<Transaction> data = new ArrayList<>();
+    private int nextId = 1;
+
+    @Override
+    public List<Transaction> findAll() {
+        return new ArrayList<>(data);
+    }
+
+    @Override
+    public Optional<Transaction> findById(int id) {
+        return data.stream()
+                .filter(transaction -> transaction.getId() == id)
+                .findFirst();
+    }
+
+    @Override
+    public Transaction save(String description, double amount, TransactionType type) {
+        Transaction transaction = new Transaction(nextId++, description, amount, type);
+        data.add(transaction);
+        return transaction;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        return data.removeIf(transaction -> transaction.getId() == id);
+    }
+
+    @Override
+    public void update(Transaction transaction) {
+    }
 }

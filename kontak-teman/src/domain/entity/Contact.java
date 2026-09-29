@@ -1,2 +1,24 @@
 package domain.entity;
-public class Contact { private final int id; private String name,phone,email; public Contact(int id,String n,String p,String e){if(n==null||n.isBlank()||p==null||p.isBlank()||e==null||!e.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"))throw new IllegalArgumentException();idCheck(id);this.id=id;name=n;phone=p;email=e;} private void idCheck(int id){if(id<1)throw new IllegalArgumentException();} public int getId(){return id;} public String getName(){return name;} public String getPhone(){return phone;} public String getEmail(){return email;} public void update(String n,String p,String e){if(n!=null&&!n.isBlank())name=n;if(p!=null&&!p.isBlank())phone=p;if(e!=null&&!e.isBlank()){if(!e.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"))throw new IllegalArgumentException();email=e;}} }
+
+public class Contact {
+    private final int id;
+    private String name;
+    private String phone;
+    private String email;
+
+    public Contact(int id, String name, String phone, String email) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getPhone() { return phone; }
+    public String getEmail() { return email; }
+
+    public void changeName(String name) { this.name = name; }
+    public void changePhone(String phone) { this.phone = phone; }
+    public void changeEmail(String email) { this.email = email; }
+}

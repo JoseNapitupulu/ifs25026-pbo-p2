@@ -1,3 +1,38 @@
 package adapter.repository;
-import domain.entity.Activity; import domain.repository.IActivityRepository; import java.util.*;
-public class ActivityRepository implements IActivityRepository { private final List<Activity> data=new ArrayList<>(); private int nextId=1; public List<Activity> findAll(){return new ArrayList<>(data);} public Optional<Activity> findById(int id){return data.stream().filter(a->a.getId()==id).findFirst();} public Activity save(String t,String d,String w){Activity a=new Activity(nextId++,t,d,w);data.add(a);return a;} public boolean deleteById(int id){return data.removeIf(a->a.getId()==id);} }
+
+import domain.entity.Activity;
+import domain.repository.IActivityRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class ActivityRepository implements IActivityRepository {
+    private final List<Activity> data = new ArrayList<>();
+    private int idCounter = 0;
+
+    @Override
+    public List<Activity> findAll() {
+        return new ArrayList<>(data);
+    }
+
+    @Override
+    public Optional<Activity> findById(int id) {
+        return data.stream().filter(a -> a.getId() == id).findFirst();
+    }
+
+    @Override
+    public Activity save(String title, String day, String time) {
+        Activity activity = new Activity(++idCounter, title, day, time);
+        data.add(activity);
+        return activity;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        return data.removeIf(a -> a.getId() == id);
+    }
+
+    @Override
+    public void update(Activity activity) {
+    }
+}

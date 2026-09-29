@@ -1,2 +1,24 @@
 package domain.entity;
-public class Activity { private final int id; private String title,day,time; public Activity(int id,String title,String day,String time){if(title==null||title.isBlank()||day==null||day.isBlank()||time==null||time.isBlank())throw new IllegalArgumentException();this.id=id;this.title=title;this.day=day;this.time=time;} public int getId(){return id;} public String getTitle(){return title;} public String getDay(){return day;} public String getTime(){return time;} public void update(String t,String d,String w){if(t!=null&&!t.isBlank())title=t;if(d!=null&&!d.isBlank())day=d;if(w!=null&&!w.isBlank())time=w;} }
+
+public class Activity {
+    private final int id;
+    private String title;
+    private String day;
+    private String time;
+
+    public Activity(int id, String title, String day, String time) {
+        this.id = id;
+        this.title = title;
+        this.day = day;
+        this.time = time;
+    }
+
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDay() { return day; }
+    public String getTime() { return time; }
+
+    public void changeTitle(String title) { this.title = title; }
+    public void changeDay(String day) { this.day = day; }
+    public void changeTime(String time) { this.time = time; }
+}

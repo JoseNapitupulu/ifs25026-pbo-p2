@@ -1,8 +1,9 @@
-import adapter.presenter.TodoPresenter;
-import adapter.repository.TodoRepository;
-import domain.repository.ITodoRepository;
-import framework.view.TodoView;
-import usecase.TodoUseCase;
+import adapter.presenter.GuestPresenter;
+import adapter.repository.GuestRepository;
+import domain.repository.IGuestRepository;
+import framework.view.GuestView;
+import usecase.GuestUseCase;
+
 /**
  * Titik masuk aplikasi (Composition Root).
  * Semua dependency antar layer disusun di sini — satu-satunya tempat
@@ -11,14 +12,18 @@ import usecase.TodoUseCase;
 public class App {
     public static void main(String[] args) {
         // Layer adapter: implementasi konkret repository (penyimpanan in-memory)
-        ITodoRepository todoRepository = new TodoRepository();
+        IGuestRepository guestRepository = new GuestRepository();
+
         // Layer usecase: logika bisnis, hanya bergantung pada interface repository
-        TodoUseCase todoUseCase = new TodoUseCase(todoRepository);
+        GuestUseCase guestUseCase = new GuestUseCase(guestRepository);
+
         // Layer adapter: presenter untuk memformat output ke layar
-        TodoPresenter todoPresenter = new TodoPresenter();
+        GuestPresenter guestPresenter = new GuestPresenter();
+
         // Layer framework: UI konsol yang menerima input user
-        TodoView todoView = new TodoView(todoUseCase, todoPresenter);
+        GuestView guestView = new GuestView(guestUseCase, guestPresenter);
+
         // Menjalankan loop menu utama aplikasi
-        todoView.show();
+        guestView.show();
     }
 }

@@ -1,10 +1,10 @@
 package framework.view;
 
 import adapter.presenter.ContactPresenter;
-import framework.util.ContactInputUtil;
+import domain.entity.SortOption;
+import framework.util.InputUtil;
 import usecase.ContactUseCase;
 
-/** Tampilan konsol untuk mengelola kontak teman. */
 public class ContactView {
     private final ContactUseCase useCase;
     private final ContactPresenter presenter;
@@ -14,77 +14,127 @@ public class ContactView {
         this.presenter = presenter;
     }
 
-    /** Menjalankan menu utama sampai user memilih keluar. */
     public void show() {
         boolean running = true;
         while (running) {
-            presenter.show(useCase.all());
+            presenter.showContacts(useCase.getAllContacts());
             printMenu();
-            switch (ContactInputUtil.input("Pilih")) {
+            String input = InputUtil.input("Pilih");
+            switch (input) {
                 case "1" -> addContact();
-                case "2" -> searchContact();
-                case "3" -> updateContact();
-                case "4" -> removeContact();
-                case "0" -> running = false;
-                default -> presenter.msg("[!] Pilihan tidak valid!");
+                case "2" -> updateContact();
+                case "3" -> searchContact();
+                case "4" -> sortContact();
+                case "5" -> removeContact();
+                case "x" -> running = false;
+                default -> presenter.showInvalidChoice();
             }
+            if (running) System.out.println();
         }
     }
 
     private void printMenu() {
-        System.out.println("Menu Kontak Teman:");
-        System.out.println("1. Tambah kontak");
-        System.out.println("2. Cari kontak");
-        System.out.println("3. Ubah kontak");
-        System.out.println("4. Hapus kontak");
-        System.out.println("0. Keluar");
+        System.out.println("Menu:");
+        System.out.println("1. Tambah");
+        System.out.println("2. Ubah");
+        System.out.println("3. Cari");
+        System.out.println("4. Urutkan");
+        System.out.println("5. Hapus");
+        System.out.println("x. Keluar");
     }
 
     private void addContact() {
-        String name = ContactInputUtil.input("Nama (x Jika Batal)");
-        if (name.equalsIgnoreCase("x")) return;
-        String phone = ContactInputUtil.input("Nomor telepon");
-        String email = ContactInputUtil.input("Email");
-        if (name.isBlank() || phone.isBlank() || !isValidEmail(email)) {
-            presenter.msg("[!] Nama, nomor telepon, dan email valid wajib diisi!");
-            return;
-        }
-        presenter.added(useCase.add(name, phone, email));
-    }
-
-    private void searchContact() {
-        String keyword = ContactInputUtil.input("Kata kunci (x Jika Batal)");
-        if (!keyword.equalsIgnoreCase("x")) presenter.show(useCase.search(keyword));
-    }
-
-    private void removeContact() {
-        Integer id = readId("ID kontak (x Jika Batal)");
-        if (id == null) return;
-        presenter.msg(useCase.remove(id) ? "Berhasil menghapus kontak." : "[!] Kontak tidak ditemukan!");
+        System.out.println("[Menambah Kontak]");
+        String name = InputUtil.input("Nama (x Jika Batal)");
+        if (name.equals("x")) return;
+        
+        String phone = InputUtil.input("Telepon");
+        if (phone.equals("x")) return;
+        
+        String email = InputUtil.input("Email");
+        if (email.equals("x")) return;
+        
+        presenter.showAddSuccess(useCase.addContact(name, phone, email));
     }
 
     private void updateContact() {
-        Integer id = readId("ID kontak (x Jika Batal)");
+        System.out.println("[Mengubah Kontak]");
+        String strId = InputUtil.input("ID Kontak yang diubah (x Jika Batal)");
+        if (strId.equals("x")) return;
+        
+        Integer id = parseId(strId);
         if (id == null) return;
-        String name = ContactInputUtil.input("Nama baru (kosongkan jika tidak berubah)");
-        String phone = ContactInputUtil.input("Nomor baru (kosongkan jika tidak berubah)");
-        String email = ContactInputUtil.input("Email baru (kosongkan jika tidak berubah)");
-        if (!email.isBlank() && !isValidEmail(email)) {
-            presenter.msg("[!] Email tidak valid!");
+        
+        String newName = InputUtil.input("Nama Baru (Kosongkan jika tidak ingin mengubah)");
+        String newPhone = InputUtil.input("Telepon Baru (Kosongkan jika tidak ingin mengubah)");
+        String newEmail = InputUtil.input("Email Baru (Kosongkan jika tidak ingin mengubah)");
+        
+        String name = newName.isBlank() ? null : newName;
+        String phone = newPhone.isBlank() ? null : newPhone;
+        String email = newEmail.isBlank() ? null : newEmail;
+        
+        if (useCase.updateContact(id, name, phone, email)) {
+            presenter.showUpdateSuccess();
+        } else {
+            presenter.showUpdateFailed(id);
+        }
+    }
+
+    private void searchContact() {
+        System.out.println("[Mencari Kontak]");
+        String keyword = InputUtil.input("Kata Kunci (x Jika Batal)");
+        if (!keyword.equals("x")) {
+            presenter.showSearchResults(useCase.searchContacts(keyword), keyword);
+        }
+    }
+
+    private void sortContact() {
+        System.out.println("[Mengurutkan Kontak]");
+        System.out.println("Pilihan Pengurutan:");
+        System.out.println("1. Nama (A-Z)");
+        System.out.println("2. Nama (Z-A)");
+        System.out.println("x. Batal");
+        String input = InputUtil.input("Pilih");
+        if (input.equals("x")) return;
+        
+        SortOption option = mapSortOption(input);
+        if (option == null) {
+            presenter.showInvalidSortOption();
             return;
         }
-        presenter.msg(useCase.update(id, name, phone, email) ? "Berhasil mengubah kontak." : "[!] Gagal mengubah kontak dengan ID: " + id + ".");
+        
+        presenter.showSortedContacts(useCase.sortContacts(option));
     }
 
-    private boolean isValidEmail(String email) {
-        return email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
+    private void removeContact() {
+        System.out.println("[Menghapus Kontak]");
+        String strId = InputUtil.input("[ID Kontak] yang dihapus (x Jika Batal)");
+        if (strId.equals("x")) return;
+        
+        Integer id = parseId(strId);
+        if (id == null) return;
+        
+        if (useCase.removeContact(id)) {
+            presenter.showRemoveSuccess();
+        } else {
+            presenter.showRemoveFailed(id);
+        }
     }
 
-    private Integer readId(String prompt) {
-        String input = ContactInputUtil.input(prompt);
-        if (input.equalsIgnoreCase("x")) return null;
-        Integer id = ContactInputUtil.idValue(input);
-        if (id == null) presenter.msg("[!] ID tidak valid!");
-        return id;
+    private Integer parseId(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            presenter.showInvalidId();
+            return null;
+        }
+    }
+
+    private SortOption mapSortOption(String input) {
+        return switch (input) {
+            case "1" -> SortOption.NAME_ASC;
+            case "2" -> SortOption.NAME_DESC;
+            default -> null;
+        };
     }
 }
