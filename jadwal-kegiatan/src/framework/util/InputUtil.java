@@ -2,14 +2,17 @@ package framework.util;
 
 import java.util.Scanner;
 
-public class InputUtil {
-    private static final Scanner scanner = new Scanner(System.in);
+public final class InputUtil {
+    private static final Scanner SCANNER = new Scanner(System.in);
+
+    private InputUtil() {
+    }
 
     public static String input(String info) {
         System.out.print(info + " : ");
-        if (!scanner.hasNextLine()) {
-            System.exit(0);
+        if (!SCANNER.hasNextLine()) {
+            return "";
         }
-        return scanner.nextLine();
+        return SCANNER.nextLine().trim();
     }
 }

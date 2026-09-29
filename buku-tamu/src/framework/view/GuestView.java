@@ -19,7 +19,7 @@ public class GuestView {
             presenter.showGuests(useCase.getAllGuests());
             printMenu();
             String input = InputUtil.input("Pilih");
-            switch (input) {
+            switch (input.toLowerCase()) {
                 case "1" -> addGuest();
                 case "2" -> searchGuest();
                 case "3" -> removeGuest();
@@ -42,11 +42,11 @@ public class GuestView {
     private void addGuest() {
         System.out.println("[Mendaftarkan Tamu]");
         String name = InputUtil.input("Nama (x Jika Batal)");
-        if (name.equals("x"))
+        if (name.equalsIgnoreCase("x"))
             return;
 
         String purpose = InputUtil.input("Tujuan Kunjungan (x Jika Batal)");
-        if (purpose.equals("x"))
+        if (purpose.equalsIgnoreCase("x"))
             return;
 
         presenter.showAddSuccess(useCase.addGuest(name, purpose));
@@ -55,7 +55,7 @@ public class GuestView {
     private void searchGuest() {
         System.out.println("[Mencari Tamu]");
         String keyword = InputUtil.input("Nama (x Jika Batal)");
-        if (!keyword.equals("x")) {
+        if (!keyword.equalsIgnoreCase("x")) {
             presenter.showSearchResults(useCase.searchGuests(keyword), keyword);
         }
     }
@@ -63,7 +63,7 @@ public class GuestView {
     private void removeGuest() {
         System.out.println("[Menghapus Tamu]");
         String strId = InputUtil.input("[ID Tamu] yang dihapus (x Jika Batal)");
-        if (strId.equals("x"))
+        if (strId.equalsIgnoreCase("x"))
             return;
 
         Integer id = parseId(strId);

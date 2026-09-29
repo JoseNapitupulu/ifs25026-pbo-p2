@@ -20,7 +20,7 @@ public class ItemView {
             presenter.showItems(useCase.getAllItems());
             printMenu();
             String input = InputUtil.input("Pilih");
-            switch (input) {
+            switch (input.toLowerCase()) {
                 case "1" -> addItem();
                 case "2" -> updateItem();
                 case "3" -> searchItem();
@@ -47,11 +47,11 @@ public class ItemView {
     private void addItem() {
         System.out.println("[Menambah Barang]");
         String name = InputUtil.input("Nama (x Jika Batal)");
-        if (name.equals("x"))
+        if (name.equalsIgnoreCase("x"))
             return;
 
         String strQuantity = InputUtil.input("Jumlah");
-        if (strQuantity.equals("x"))
+        if (strQuantity.equalsIgnoreCase("x"))
             return;
 
         Integer quantity = parseQuantity(strQuantity);
@@ -61,7 +61,7 @@ public class ItemView {
         }
 
         String category = InputUtil.input("Kategori (x Jika Batal)");
-        if (category.equals("x"))
+        if (category.equalsIgnoreCase("x"))
             return;
 
         presenter.showAddSuccess(useCase.addItem(name, quantity, category));
@@ -70,7 +70,7 @@ public class ItemView {
     private void updateItem() {
         System.out.println("[Mengubah Stok]");
         String strId = InputUtil.input("ID Barang yang diubah (x Jika Batal)");
-        if (strId.equals("x"))
+        if (strId.equalsIgnoreCase("x"))
             return;
 
         Integer id = parseId(strId);
@@ -97,7 +97,7 @@ public class ItemView {
     private void searchItem() {
         System.out.println("[Mencari Barang]");
         String keyword = InputUtil.input("Kata Kunci (x Jika Batal)");
-        if (!keyword.equals("x")) {
+        if (!keyword.equalsIgnoreCase("x")) {
             presenter.showSearchResults(useCase.searchItems(keyword), keyword);
         }
     }
@@ -111,7 +111,7 @@ public class ItemView {
         System.out.println("4. Jumlah (Terbesar -> Terkecil)");
         System.out.println("x. Batal");
         String input = InputUtil.input("Pilih");
-        if (input.equals("x"))
+        if (input.equalsIgnoreCase("x"))
             return;
 
         SortOption option = mapSortOption(input);
@@ -126,7 +126,7 @@ public class ItemView {
     private void removeItem() {
         System.out.println("[Menghapus Barang]");
         String strId = InputUtil.input("[ID Barang] yang dihapus (x Jika Batal)");
-        if (strId.equals("x"))
+        if (strId.equalsIgnoreCase("x"))
             return;
 
         Integer id = parseId(strId);

@@ -20,7 +20,7 @@ public class ActivityView {
             presenter.showActivities(useCase.getAllActivities());
             printMenu();
             String input = InputUtil.input("Pilih");
-            switch (input) {
+            switch (input.toLowerCase()) {
                 case "1" -> addActivity();
                 case "2" -> updateActivity();
                 case "3" -> searchActivity();
@@ -47,15 +47,15 @@ public class ActivityView {
     private void addActivity() {
         System.out.println("[Menambah Kegiatan]");
         String title = InputUtil.input("Judul (x Jika Batal)");
-        if (title.equals("x"))
+        if (title.equalsIgnoreCase("x"))
             return;
 
         String day = InputUtil.input("Hari (x Jika Batal)");
-        if (day.equals("x"))
+        if (day.equalsIgnoreCase("x"))
             return;
 
         String time = InputUtil.input("Waktu (x Jika Batal)");
-        if (time.equals("x"))
+        if (time.equalsIgnoreCase("x"))
             return;
 
         presenter.showAddSuccess(useCase.addActivity(title, day, time));
@@ -64,7 +64,7 @@ public class ActivityView {
     private void updateActivity() {
         System.out.println("[Mengubah Kegiatan]");
         String strId = InputUtil.input("ID Kegiatan yang diubah (x Jika Batal)");
-        if (strId.equals("x"))
+        if (strId.equalsIgnoreCase("x"))
             return;
 
         Integer id = parseId(strId);
@@ -89,7 +89,7 @@ public class ActivityView {
     private void searchActivity() {
         System.out.println("[Mencari Kegiatan]");
         String keyword = InputUtil.input("Kata Kunci (x Jika Batal)");
-        if (!keyword.equals("x")) {
+        if (!keyword.equalsIgnoreCase("x")) {
             presenter.showSearchResults(useCase.searchActivities(keyword), keyword);
         }
     }
@@ -103,7 +103,7 @@ public class ActivityView {
         System.out.println("4. Judul (Z-A)");
         System.out.println("x. Batal");
         String input = InputUtil.input("Pilih");
-        if (input.equals("x"))
+        if (input.equalsIgnoreCase("x"))
             return;
 
         SortOption option = mapSortOption(input);
@@ -118,7 +118,7 @@ public class ActivityView {
     private void removeActivity() {
         System.out.println("[Menghapus Kegiatan]");
         String strId = InputUtil.input("[ID Kegiatan] yang dihapus (x Jika Batal)");
-        if (strId.equals("x"))
+        if (strId.equalsIgnoreCase("x"))
             return;
 
         Integer id = parseId(strId);

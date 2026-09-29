@@ -20,7 +20,7 @@ public class ContactView {
             presenter.showContacts(useCase.getAllContacts());
             printMenu();
             String input = InputUtil.input("Pilih");
-            switch (input) {
+            switch (input.toLowerCase()) {
                 case "1" -> addContact();
                 case "2" -> updateContact();
                 case "3" -> searchContact();
@@ -46,13 +46,13 @@ public class ContactView {
     private void addContact() {
         System.out.println("[Menambah Kontak]");
         String name = InputUtil.input("Nama (x Jika Batal)");
-        if (name.equals("x")) return;
+        if (name.equalsIgnoreCase("x")) return;
         
         String phone = InputUtil.input("Telepon");
-        if (phone.equals("x")) return;
+        if (phone.equalsIgnoreCase("x")) return;
         
         String email = InputUtil.input("Email");
-        if (email.equals("x")) return;
+        if (email.equalsIgnoreCase("x")) return;
         
         presenter.showAddSuccess(useCase.addContact(name, phone, email));
     }
@@ -60,7 +60,7 @@ public class ContactView {
     private void updateContact() {
         System.out.println("[Mengubah Kontak]");
         String strId = InputUtil.input("ID Kontak yang diubah (x Jika Batal)");
-        if (strId.equals("x")) return;
+        if (strId.equalsIgnoreCase("x")) return;
         
         Integer id = parseId(strId);
         if (id == null) return;
@@ -83,7 +83,7 @@ public class ContactView {
     private void searchContact() {
         System.out.println("[Mencari Kontak]");
         String keyword = InputUtil.input("Kata Kunci (x Jika Batal)");
-        if (!keyword.equals("x")) {
+        if (!keyword.equalsIgnoreCase("x")) {
             presenter.showSearchResults(useCase.searchContacts(keyword), keyword);
         }
     }
@@ -95,7 +95,7 @@ public class ContactView {
         System.out.println("2. Nama (Z-A)");
         System.out.println("x. Batal");
         String input = InputUtil.input("Pilih");
-        if (input.equals("x")) return;
+        if (input.equalsIgnoreCase("x")) return;
         
         SortOption option = mapSortOption(input);
         if (option == null) {
@@ -109,7 +109,7 @@ public class ContactView {
     private void removeContact() {
         System.out.println("[Menghapus Kontak]");
         String strId = InputUtil.input("[ID Kontak] yang dihapus (x Jika Batal)");
-        if (strId.equals("x")) return;
+        if (strId.equalsIgnoreCase("x")) return;
         
         Integer id = parseId(strId);
         if (id == null) return;
