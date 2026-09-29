@@ -23,6 +23,7 @@ public class Todo {
 
     /** Membuat todo dengan status selesai yang sudah ditentukan. */
     public Todo(int id, String title, boolean finished) {
+        validateTitle(title);
         this.id = id;
         this.title = title;
         this.finished = finished;
@@ -42,11 +43,18 @@ public class Todo {
 
     /** Mengubah judul todo. */
     public void changeTitle(String title) {
+        validateTitle(title);
         this.title = title;
     }
 
     /** Mengubah status selesai todo. */
     public void changeFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    private static void validateTitle(String title) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Judul todo tidak boleh kosong");
+        }
     }
 }

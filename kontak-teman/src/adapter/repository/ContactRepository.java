@@ -34,6 +34,16 @@ public class ContactRepository implements IContactRepository {
 
     @Override
     public void update(Contact contact) {
-        // Contact is mutable and stored by reference, so the change is already persisted.
+        replaceById(contact);
+    }
+
+    private void replaceById(Contact contact) {
+        for (int index = 0; index < data.size(); index++) {
+            if (data.get(index).getId() == contact.getId()) {
+                data.set(index, contact);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Kontak tidak ditemukan: " + contact.getId());
     }
 }

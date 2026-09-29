@@ -34,6 +34,16 @@ public class GuestRepository implements IGuestRepository {
 
     @Override
     public void update(Guest guest) {
-        // Guest is mutable and stored by reference, so the change is already persisted.
+        replaceById(guest);
+    }
+
+    private void replaceById(Guest guest) {
+        for (int index = 0; index < data.size(); index++) {
+            if (data.get(index).getId() == guest.getId()) {
+                data.set(index, guest);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Tamu tidak ditemukan: " + guest.getId());
     }
 }

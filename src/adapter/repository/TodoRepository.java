@@ -18,6 +18,14 @@ public class TodoRepository implements ITodoRepository {
     public Todo save(String title) { Todo todo = new Todo(++idCounter, title); data.add(todo); return todo; }
     /** Menghapus todo berdasarkan ID. */
     public boolean deleteById(int id) { return data.removeIf(todo -> todo.getId() == id); }
-    /** Menyimpan perubahan entity yang mutable. */
-    public void update(Todo todo) { }
+    @Override
+    public void update(Todo todo) {
+        for (int index = 0; index < data.size(); index++) {
+            if (data.get(index).getId() == todo.getId()) {
+                data.set(index, todo);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Todo tidak ditemukan: " + todo.getId());
+    }
 }

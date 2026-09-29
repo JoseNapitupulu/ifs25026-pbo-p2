@@ -34,6 +34,16 @@ public class ItemRepository implements IItemRepository {
 
     @Override
     public void update(Item item) {
-        // Item is mutable and stored by reference, so the change is already persisted.
+        replaceById(item);
+    }
+
+    private void replaceById(Item item) {
+        for (int index = 0; index < data.size(); index++) {
+            if (data.get(index).getId() == item.getId()) {
+                data.set(index, item);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Barang tidak ditemukan: " + item.getId());
     }
 }

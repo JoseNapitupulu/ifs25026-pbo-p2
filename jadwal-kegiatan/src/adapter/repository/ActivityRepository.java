@@ -34,6 +34,16 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public void update(Activity activity) {
-        // Activity is mutable and stored by reference, so the change is already persisted.
+        replaceById(activity);
+    }
+
+    private void replaceById(Activity activity) {
+        for (int index = 0; index < data.size(); index++) {
+            if (data.get(index).getId() == activity.getId()) {
+                data.set(index, activity);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Kegiatan tidak ditemukan: " + activity.getId());
     }
 }

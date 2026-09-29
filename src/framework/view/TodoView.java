@@ -31,7 +31,7 @@ public class TodoView {
             printMenu();
 
             String input = InputUtil.input("Pilih");
-            switch (input) {
+            switch (input.toLowerCase()) {
                 case "1" -> addTodo();
                 case "2" -> updateTodo();
                 case "3" -> searchTodo();
@@ -63,7 +63,7 @@ public class TodoView {
         System.out.println("[Menambah Todo]");
         String title = InputUtil.input("Judul (x Jika Batal)");
 
-        if (!title.equals("x")) {
+        if (!title.equalsIgnoreCase("x")) {
             presenter.showAddSuccess(todoUseCase.addTodo(title));
         }
     }
@@ -73,7 +73,7 @@ public class TodoView {
         System.out.println("[Menghapus Todo]");
         String strIdTodo = InputUtil.input("[ID Todo] yang dihapus (x Jika Batal)");
 
-        if (strIdTodo.equals("x")) {
+        if (strIdTodo.equalsIgnoreCase("x")) {
             return;
         }
 
@@ -94,7 +94,7 @@ public class TodoView {
         System.out.println("[Mengubah Todo]");
         String strIdTodo = InputUtil.input("ID Todo yang diubah (x Jika Batal)");
 
-        if (strIdTodo.equals("x")) {
+        if (strIdTodo.equalsIgnoreCase("x")) {
             return;
         }
 
@@ -128,7 +128,7 @@ public class TodoView {
         System.out.println("[Mencari Todo]");
         String keyword = InputUtil.input("Kata Kunci (x Jika Batal)");
 
-        if (!keyword.equals("x")) {
+        if (!keyword.equalsIgnoreCase("x")) {
             presenter.showSearchResults(todoUseCase.searchTodos(keyword), keyword);
         }
     }
@@ -144,7 +144,7 @@ public class TodoView {
         System.out.println("x. Batal");
 
         String input = InputUtil.input("Pilih");
-        if (input.equals("x")) {
+        if (input.equalsIgnoreCase("x")) {
             return;
         }
 
