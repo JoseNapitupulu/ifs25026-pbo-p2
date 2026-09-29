@@ -1,0 +1,3 @@
+package adapter.repository;
+import domain.entity.Contact; import domain.repository.IContactRepository; import java.util.*;
+public class ContactRepository implements IContactRepository { private final List<Contact> data=new ArrayList<>(); private int nextId=1; public List<Contact> findAll(){return new ArrayList<>(data);} public Optional<Contact> findById(int id){return data.stream().filter(c->c.getId()==id).findFirst();} public Contact save(String n,String p,String e){Contact c=new Contact(nextId++,n,p,e);data.add(c);return c;} public boolean deleteById(int id){return data.removeIf(c->c.getId()==id);} }

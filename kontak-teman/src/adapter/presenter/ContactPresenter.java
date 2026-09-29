@@ -1,0 +1,3 @@
+package adapter.presenter;
+import domain.entity.Contact; import java.util.*;
+public class ContactPresenter { private String f(Contact c){return c.getId()+" | "+c.getName()+" | "+c.getPhone()+" | "+c.getEmail();} public void show(List<Contact> cs){if(cs.isEmpty()){System.out.println("- Data kontak belum tersedia!");return;}cs.forEach(c->System.out.println(f(c)));} public void added(Contact c){System.out.println("Berhasil menambah kontak: "+f(c));} public void msg(String s){System.out.println(s);} }

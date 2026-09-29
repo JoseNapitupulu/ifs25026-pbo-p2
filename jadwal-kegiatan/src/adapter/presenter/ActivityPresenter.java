@@ -1,0 +1,3 @@
+package adapter.presenter;
+import domain.entity.Activity; import java.util.*;
+public class ActivityPresenter { private String f(Activity a){return a.getId()+" | "+a.getTitle()+" | "+a.getDay()+" | "+a.getTime();} public void show(List<Activity> as){if(as.isEmpty()){System.out.println("- Data kegiatan belum tersedia!");return;}as.forEach(a->System.out.println(f(a)));} public void added(Activity a){System.out.println("Berhasil menambah kegiatan: "+f(a));} public void msg(String s){System.out.println(s);} }
