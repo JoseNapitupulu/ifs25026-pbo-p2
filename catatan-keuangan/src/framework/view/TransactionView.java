@@ -30,7 +30,7 @@ public class TransactionView {
                 case "5" -> updateTransaction();
                 case "6" -> sortTransactions();
                 case "0" -> running = false;
-                default -> presenter.message("[!] Pilihan tidak valid!");
+                default -> presenter.message("[!] Pilihan tidak dimengerti.");
             }
         }
     }
@@ -48,7 +48,9 @@ public class TransactionView {
 
     private void addTransaction() {
         String description = TransactionInputUtil.input("Deskripsi (x Jika Batal)");
-        if (description.equalsIgnoreCase("x")) return;
+        if (description.equalsIgnoreCase("x")) {
+            return;
+        }
         Double amount = TransactionInputUtil.amount("Jumlah");
         TransactionType type = parseType(TransactionInputUtil.input("Tipe (i = pemasukan, e = pengeluaran)"));
         if (description.isBlank() || amount == null || amount <= 0 || type == null) {
@@ -60,13 +62,19 @@ public class TransactionView {
 
     private void searchTransaction() {
         String keyword = TransactionInputUtil.input("Kata kunci (x Jika Batal)");
-        if (!keyword.equalsIgnoreCase("x")) presenter.show(useCase.search(keyword));
+        if (!keyword.equalsIgnoreCase("x")) {
+            presenter.show(useCase.search(keyword));
+        }
     }
 
     private void removeTransaction() {
         Integer id = readId("ID transaksi (x Jika Batal)");
         if (id == null) return;
-        presenter.message(useCase.remove(id) ? "Berhasil menghapus transaksi." : "[!] Transaksi tidak ditemukan!");
+        if (useCase.remove(id)) {
+            presenter.message("Berhasil menghapus transaksi.");
+        } else {
+            presenter.message("[!] Gagal menghapus transaksi dengan ID: " + id + ".");
+        }
     }
 
     private void updateTransaction() {
@@ -82,22 +90,35 @@ public class TransactionView {
             return;
         }
         try {
-            presenter.message(useCase.update(id, description, amount, type) ? "Berhasil mengubah transaksi." : "[!] Transaksi tidak ditemukan!");
+            if (useCase.update(id, description, amount, type)) {
+                presenter.message("Berhasil mengubah transaksi.");
+            } else {
+                presenter.message("[!] Gagal mengubah transaksi dengan ID: " + id + ".");
+            }
         } catch (IllegalArgumentException exception) {
             presenter.message("[!] Jumlah transaksi tidak valid!");
         }
     }
 
     private void sortTransactions() {
-        String input = TransactionInputUtil.input("Urutkan (1 = deskripsi, 2 = jumlah terbesar, 3 = pemasukan dahulu)");
+        System.out.println("Pilihan Pengurutan:");
+        System.out.println("1. Jumlah terkecil");
+        System.out.println("2. Jumlah terbesar");
+        System.out.println("3. Pemasukan dulu");
+        System.out.println("4. Pengeluaran dulu");
+        String input = TransactionInputUtil.input("Pilih");
         TransactionSortOption option = switch (input) {
-            case "1" -> TransactionSortOption.DESCRIPTION_ASC;
+            case "1" -> TransactionSortOption.AMOUNT_ASC;
             case "2" -> TransactionSortOption.AMOUNT_DESC;
             case "3" -> TransactionSortOption.INCOME_FIRST;
+            case "4" -> TransactionSortOption.EXPENSE_FIRST;
             default -> null;
         };
-        if (option == null) presenter.message("[!] Pilihan pengurutan tidak valid!");
-        else presenter.show(useCase.sort(option));
+        if (option == null) {
+            presenter.message("[!] Pilihan pengurutan tidak valid!");
+        } else {
+            presenter.show(useCase.sort(option));
+        }
     }
 
     private TransactionType parseType(String input) {
